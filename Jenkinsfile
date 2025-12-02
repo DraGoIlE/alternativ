@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKER_IMAGE = "rafkaihza78/hello-cicd"
         DOCKER_TAG   = "latest"
-        KUBECONFIG   = "/var/jenkins_home/kube-jenkins.config"
     }
 
     // 🔔 Trigger lewat GitHub Webhook
@@ -45,10 +44,13 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh """
-                  kubectl apply -f k8s.yaml
-                  kubectl rollout restart deployment hello-cicd-deployment
-                """
+                withCredentials([file(credentialsId: 'kubeconfig-cred', variable: 'KCFG')]) {
+                    sh """
+                      export KUBECONFIG=$KCFG
+                      kubectl apply -f k8s.yaml
+                      kubectl rollout restart deployment hello-cicd-deployment
+                    """
+                }
             }
         }
     }
