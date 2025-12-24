@@ -3,9 +3,10 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
-  res.send("NIGGER NIGGER NIGGER NIGGER!");
+  res.send("Hello, CI/CD");
 });
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
+  
